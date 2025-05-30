@@ -138,6 +138,7 @@ export default function Home() {
       <div className="space-y-4">
         {results.map((item) => (
           <div key={item.nik} className="p-4 border rounded-lg flex items-center gap-4">
+<Link href={`/detail/${item.nik}`}>
 <Image
   src={item.id_foto ? 
     `https://lh3.googleusercontent.com/d/${item.id_foto}=s50` : 
@@ -149,6 +150,7 @@ export default function Home() {
   height={50}
   className="w-12 h-12 rounded"
 />
+</Link>
             <div className="flex-1">
               <h3 className="font-semibold">{item.nama_lengkap}</h3>
               {searchType === 'nama' ? (
@@ -157,16 +159,11 @@ export default function Home() {
                 </>
               ) : (
                 <>
-			 <p>{formatTanggalLengkap(item.tgl_lhr)} </p>
-			 <p>{capitalize(item.status_hub_keluarga)}</p>
+		<p>{formatTanggalLengkap(item.tgl_lhr)} </p>
+		<p>{capitalize(item.status_hub_keluarga)}</p>
                 </>
               )}
             </div>
-            <Link href={`/detail/${item.nik}`}>
-              <div className="bg-blue-100 text-blue-800 px-3 py-2 rounded hover:bg-blue-200 transition-colors cursor-pointer border border-blue-200">
-                Detail
-              </div>
-            </Link>
           </div>
         ))}
       </div>
