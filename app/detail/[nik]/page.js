@@ -133,6 +133,7 @@ if (loading) {
               .filter(member => member.nik !== data.nik)
               .map(member => (
                 <div key={member.nik} className="p-4 border rounded flex items-center gap-4">
+                  <Link href={`/detail/${member.nik}`} >
                   <Image
                     src={member.id_foto ? 
     `https://lh3.googleusercontent.com/d/${member.id_foto}=s50` : 
@@ -144,14 +145,12 @@ if (loading) {
                     height={50}
                     className="w-12 h-12 rounded"
                   />
+                  </Link>
                   <div className="flex-1">
                     <h3 className="font-medium">{member.nama_lengkap}</h3>
                     <p>{formatTanggalLengkap(member.tgl_lhr)}</p>
                     <p>{member.status_hub_keluarga}  lahir di {capitalize(member.tmpt_lhr)}</p>
                   </div>
-                  <Link href={`/detail/${member.nik}`} className="text-blue-500 hover:text-blue-700">
-                    Detail
-                  </Link>
                 </div>
               ))}
           </div>
