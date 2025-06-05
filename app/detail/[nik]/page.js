@@ -6,12 +6,26 @@ import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { formatTanggalLengkap } from '@/utils/formatTanggal';
 import SkeletonLoader from '@/components/SkeletonLoader';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function DetailPage() {
   const { nik } = useParams();
   const [data, setData] = useState(null);
   const [family, setFamily] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [visibleFields, setVisibleFields] = useState({
+    nik: false,
+    no_kk: false,
+    ibu: false,
+    ayah: false
+  });
+
+  const toggleVisibility = (field) => {
+    setVisibleFields(prev => ({
+      ...prev,
+      [field]: !prev[field]
+    }));
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,6 +87,24 @@ if (loading) {
   if (!data) {
     return <div className="container mx-auto p-4">Data tidak ditemukan</div>;
   }
+  const renderSensitiveField = (value, field) => {
+    return (
+      <div className="flex items-center">
+        {visibleFields[field] ? (
+          <span>{value}</span>
+        ) : (
+          <span className="text-gray-500">••••••••••••••••••••••••••••</span>
+        )}
+        <button 
+          onClick={() => toggleVisibility(field)}
+          className="ml-2 text-gray-500 hover:text-gray-700"
+          type="button"
+        >
+          {visibleFields[field] ? <FaEyeSlash /> : <FaEye />}
+        </button>
+      </div>
+    );
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -119,7 +151,13 @@ if (loading) {
           }).map(([key, value]) => (
             <div key={key} className="flex border-b py-2">
               <div className="w-1/3 font-medium">{key}</div>
-              <div className="w-2/3">{value}</div>
+              <div className="w-2/3">
+                {['NIK', 'No KK', 'Ibu', 'Ayah'].includes(key) ? (
+                  renderSensitiveField(value, key.toLowerCase().replace(' ', '_'))
+                ) : (
+                  value
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -127,7 +165,7 @@ if (loading) {
 
       {family.length > 1 && (
         <div className="mt-8">
-          <h2 className="text-xl font-semibold mb-4">Anggota Keluarga Lain:</h2>
+          <h2 className="text-xl font-semibold mb-4">Anggota KK :</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {family
               .filter(member => member.nik !== data.nik)
